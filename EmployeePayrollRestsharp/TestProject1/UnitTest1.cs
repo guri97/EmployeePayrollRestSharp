@@ -117,6 +117,31 @@ namespace EmployeePayrollTest
                 Console.WriteLine(response.Content);
             }
         }
+        /// <summary>
+        /// UC 4 : Update the salary into the json file in json server
+        /// </summary>
+        [Test]
+        public void OnCallingPutAPI_ReturnEmployeeObject()
+        {
+            //Arrange
+            //Initialize the request for PUT to add new employee
+            RestRequest request = new RestRequest("/employees/6", Method.Put);
+            JsonObject jsonObj = new JsonObject();
+            jsonObj.Add("name", "Lisa");
+            jsonObj.Add("salary", "95000");
+            //Added parameters to the request object such as the content-type and attaching the jsonObj with the request
+            request.AddParameter("application/json", jsonObj, ParameterType.RequestBody);
+
+            //Act
+            RestResponse response = client.Execute(request);
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Employee employee = JsonConvert.DeserializeObject<Employee>(response.Content);
+            Assert.AreEqual("Lisa", employee.Name);
+            Assert.AreEqual("95000", employee.Salary);
+            Console.WriteLine(response.Content);
+        }
     }
 }
 
