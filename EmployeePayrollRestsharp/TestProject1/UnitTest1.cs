@@ -142,6 +142,23 @@ namespace EmployeePayrollTest
             Assert.AreEqual("95000", employee.Salary);
             Console.WriteLine(response.Content);
         }
+        /// <summary>
+        /// UC 5 : Delete the employee details with given id
+        /// </summary>
+        [Test]
+        public void OnCallingDeleteAPI_ReturnSuccessStatus()
+        {
+            //Arrange
+            //Initialize the request for PUT to add new employee
+            RestRequest request = new RestRequest("/employees/7", Method.Delete);
+
+            //Act
+            RestResponse response = client.Execute(request);
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Console.WriteLine(response.Content);
+        }
     }
 }
 
