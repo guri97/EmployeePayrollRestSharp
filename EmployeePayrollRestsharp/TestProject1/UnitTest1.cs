@@ -1,9 +1,11 @@
 using EmployeePayrollRestSharp;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text.Json.Nodes;
 
 namespace EmployeePayrollTest
 {
@@ -55,6 +57,31 @@ namespace EmployeePayrollTest
             {
                 Console.WriteLine("Id: " + emp.Id + "\t" + "Name: " + emp.Name + "\t" + "Salary: " + emp.Salary);
             }
+        }
+        /// <summary>
+        /// UC 2 : Add new employee to the json file in JSON server and return the same
+        /// </summary>
+        [Test]
+        public void OnCallingPostAPI_ReturnEmployeeObject()
+        {
+            //Arrange
+            //Initialize the request for POST to add new employee
+            RestRequest request = new RestRequest("/employees", Method.Post);
+            JsonObject jsonObj = new JsonObject();
+            jsonObj.Add("name", "Mounesh");
+            jsonObj.Add("salary", "78400");
+
+            request.AddParameter("application/json", jsonObj, ParameterType.RequestBody);
+
+            //Act
+            RestResponse response = client.Execute(request);
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
+            Employee employee = JsonConvert.DeserializeObject<Employee>(response.Content);
+            Assert.AreEqual("Mounesh", employee.Name);
+            Assert.AreEqual("78400", employee.Salary);
+            Console.WriteLine(response.Content);
         }
     }
 }
